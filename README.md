@@ -140,13 +140,18 @@ Target data source: loki
 Query type: Label values
 Label: container
 ```
-然後在任意處新增row，row中新增panel，Configure visualization 編輯panel 
+然後在任意處新增row，row中新增panel，Configure visualization 編輯panel
+
 data source: loki
 query選用code
 {container="$剛剛新增的變數名稱"} |=``
+
 或是query選用builder
+
 下拉式選單選擇container = $剛剛新增的變數名稱
+
 run query然後save就完成了
+
 完成後右邊export as code，把自訂的dashboard匯出成json。將json放到grafana/provisioning/dashboards，compose up 後即是自定義的dashborad，不需要手動增加panel。
 
 
