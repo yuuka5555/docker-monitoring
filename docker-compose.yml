@@ -1,0 +1,98 @@
+services:
+
+  prometheus:
+    image: prom/prometheus:v3.12.0-rc.0
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    restart: unless-stopped
+
+    networks:
+      - monitoring
+
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+
+    restart: unless-stopped
+
+    networks:
+      - monitoring
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    ports:
+      - "8080:8080"
+    privileged: true
+
+    devices:
+      - /dev/kmsg
+
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /dev/disk:/dev/disk:ro
+
+    restart: unless-stopped
+
+    networks:
+      - monitoring
+
+  nginx:
+    image: nginx:stable-alpine3.23-perl
+    container_name: nginx-test
+    ports:
+      - "8081:80"
+    restart: unless-stopped
+
+    networks:
+      - monitoring
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql-test
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3307:3306"
+    restart: unless-stopped
+
+    networks:
+      - monitoring
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    ports:
+      - "3100:3100"
+    restart: unless-stopped
+    networks:
+      - monitoring
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./promtail/promtail.yml:/etc/promtail/config.yml
+    restart: unless-stopped
+    networks:
+      - monitoring
+
+volumes:
+  grafana-storage:
+  prometheus-data:
+
+networks:
+  monitoring:
