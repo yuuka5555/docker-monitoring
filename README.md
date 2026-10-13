@@ -5,7 +5,7 @@ title: Docker monitoring
 # Docker monitoring
 
 ## 簡易說明
-此為國立中央大學Linux與邊緣運算課程中本組的 final project ，內容為在 Ubuntu Linux 上搭建一個 docker 監控平台。
+在 Ubuntu Linux 上搭建一個 docker 監控平台。
 
 ## Tools
 - cadvisor: 收集並分析運行中容器（如 Docker、Kubernetes）的 CPU、記憶體、網路頻寬與磁碟 I/O 等效能數據
